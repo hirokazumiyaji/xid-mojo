@@ -11,7 +11,7 @@ XID のバイナリ表現は12バイト、文字列表現は20文字の小文字
 
 ## 制約
 
-実行時の追加依存は、Prefix.dev の `@hirokazumiyaji/mojo` channel で配布する `crypto = 0.1.0` だけとする。
+実行時の追加依存は、Prefix.dev の `@hirokazumiyaji/mojo` channel で配布する `crypto = 0.2.0` だけとする。
 hostname の SHA-256 には `crypto.sha256.SHA256` を使い、暗号ハッシュをこのリポジトリへ複製しない。
 
 Unix epoch の現在時刻、現在プロセスの PID、hostname を取得する公開 API は Mojo 1.0.0 の標準ライブラリにない。
@@ -156,7 +156,7 @@ channels = [
 ```toml
 [dependencies]
 mojo-compiler = "1.0.0"
-crypto = "0.1.0"
+crypto = "0.2.0"
 ```
 
 `mojo-compiler` はビルド環境であり、`xid` の Mojo コードが import する追加ライブラリは `crypto` だけである。
