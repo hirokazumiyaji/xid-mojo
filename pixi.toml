@@ -1,0 +1,23 @@
+[project]
+name = "xid"
+version = "0.1.0"
+description = "A globally unique ID generator for Mojo"
+channels = [
+    "https://prefix.dev/hirokazumiyaji/mojo",
+    "https://conda.modular.com/max",
+    "conda-forge",
+]
+platforms = ["osx-arm64", "linux-64"]
+
+[dependencies]
+mojo-compiler = "1.0.0"
+crypto = "0.2.0"
+
+[tasks]
+format = "mojo format src tests"
+test-id = "mojo -I src tests/id_test.mojo"
+test-system = "mojo -I src tests/system_test.mojo"
+test-generator = "mojo -I src tests/generator_test.mojo"
+test = { depends-on = ["test-id", "test-system", "test-generator"] }
+precompile = "mojo package src/xid -o xid.mojoc"
+test-consumer = { cmd = "mojo -I . tests/consumer.mojo", depends-on = ["precompile"] }
