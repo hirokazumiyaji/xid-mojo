@@ -5,7 +5,7 @@ from std.testing import (
     assert_raises,
     assert_true,
 )
-from xid.id import from_bytes, nil_id
+from xid.id import ID, from_bytes, from_string, nil_id, sort
 
 
 def fixture_bytes() -> Array[UInt8, 12]:
@@ -60,6 +60,44 @@ def test_bytes_returns_copy() raises:
     var raw = value.bytes()
     raw[0] = 0
     assert_equal(value.time(), UInt32(1300816219))
+
+
+def test_string_round_trip() raises:
+    var raw = fixture_bytes()
+    var value = from_bytes(Span(raw))
+    assert_equal(value.to_string(), "9m4e2mr0ui3e8a215n4g")
+    assert_equal(from_string("9m4e2mr0ui3e8a215n4g"), value)
+
+
+def test_from_string_rejects_invalid_values() raises:
+    with assert_raises(contains="xid: invalid ID"):
+        _ = from_string("9m4e2mr0ui3e8a215n4")
+    with assert_raises(contains="xid: invalid ID"):
+        _ = from_string("9m4e2mr0ui3e8a215n4w")
+    with assert_raises(contains="xid: invalid ID"):
+        _ = from_string("9M4e2mr0ui3e8a215n4g")
+    with assert_raises(contains="xid: invalid ID"):
+        _ = from_string("9m4e2mr0ui3e8a215n4h")
+
+
+def test_compare_and_sort() raises:
+    var zero = nil_id()
+    var raw = Array[UInt8, 12](fill=0)
+    raw[11] = 1
+    var one = from_bytes(Span(raw))
+    assert_equal(zero.compare(one), -1)
+    assert_equal(one.compare(zero), 1)
+    assert_equal(one.compare(one), 0)
+    var values: List[ID] = [one.copy(), zero.copy()]
+    sort(values)
+    assert_equal(values[0], zero)
+    assert_equal(values[1], one)
+
+
+def test_writable_and_hashable() raises:
+    var value = from_bytes(Span(fixture_bytes()))
+    assert_equal(String(value), "9m4e2mr0ui3e8a215n4g")
+    assert_equal(hash(value), hash(value.copy()))
 
 
 def main() raises:
