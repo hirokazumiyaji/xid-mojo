@@ -63,9 +63,7 @@ def test_generator_copies_share_counter() raises:
 
 def test_generator_counter_wraps_at_24_bits() raises:
     var machine: Array[UInt8, 3] = [1, 2, 3]
-    var generator = _generator_with_parts(
-        machine, UInt16(4), UInt32(0xFFFFFE)
-    )
+    var generator = _generator_with_parts(machine, UInt16(4), UInt32(0xFFFFFE))
     assert_equal(generator.new_with_time(1).counter(), UInt32(0xFFFFFF))
     assert_equal(generator.new_with_time(1).counter(), UInt32(0))
 
