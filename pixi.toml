@@ -12,6 +12,7 @@ platforms = ["osx-arm64", "linux-64"]
 [dependencies]
 mojo-compiler = "1.0.0"
 crypto = "0.2.0"
+mblack = "26.5.0"
 
 [tasks]
 format = "mojo format src tests"

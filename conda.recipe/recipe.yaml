@@ -1,0 +1,39 @@
+context:
+  name: xid
+  version: "0.1.0"
+
+package:
+  name: ${{ name }}
+  version: ${{ version }}
+
+source:
+  path: ..
+
+build:
+  number: 0
+  script:
+    - mojo precompile src/xid -o ${{ PREFIX }}/lib/mojo/xid.mojoc
+
+requirements:
+  build:
+    - mojo-compiler =1.0.0
+    - crypto =0.2.0
+  host:
+    - mojo-compiler =1.0.0
+    - crypto =0.2.0
+  run:
+    - ${{ pin_compatible('mojo-compiler') }}
+    - ${{ pin_compatible('crypto') }}
+
+tests:
+  - script:
+      - mojo run tests/consumer.mojo
+    files:
+      source:
+        - tests/consumer.mojo
+
+about:
+  homepage: https://github.com/hirokazumiyaji/xid-mojo
+  repository: https://github.com/hirokazumiyaji/xid-mojo
+  summary: A globally unique ID generator for Mojo
+  description: Pure Mojo implementation of the xid globally unique identifier, a 12-byte, 20-character, lexicographically sortable ID.
