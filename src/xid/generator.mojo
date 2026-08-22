@@ -19,9 +19,7 @@ struct Generator(Copyable, Movable):
             machine = _parse_machine_id_override(override)
         else:
             machine = _machine_id()
-        self = _generator_with_parts(
-            machine, _process_id(), _initial_counter()
-        )
+        self = _generator_with_parts(machine, _process_id(), _initial_counter())
 
     def __init__(
         out self,

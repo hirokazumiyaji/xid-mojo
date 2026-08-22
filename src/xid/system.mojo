@@ -15,7 +15,10 @@ def _process_id() -> UInt16:
 
 def _hostname_bytes() -> List[UInt8]:
     var buffer = Array[UInt8, 256](fill=0)
-    if external_call["gethostname", c_int](buffer.unsafe_ptr(), c_size_t(256)) != 0:
+    if (
+        external_call["gethostname", c_int](buffer.unsafe_ptr(), c_size_t(256))
+        != 0
+    ):
         return []
     var result: List[UInt8] = []
     for i in range(256):
