@@ -49,6 +49,12 @@ An XID encodes to 20 lowercase base32hex characters with alphabet `0123456789abc
 
 The text order matches bytewise order.
 
+## Ordering
+
+`ID` conforms to `Comparable`, so a `List[ID]` sorts with the standard library `sort()`.
+
+`compare()` returns `-1`, `0`, or `1` for parity with `rs/xid`.
+
 ## Generator ownership and concurrency
 
 Create one `Generator()` and retain it in application state.
@@ -64,6 +70,10 @@ The counter wraps after 2²⁴ values, so one generator has the same 2²⁴-per-
 This package does not provide package-level `New()`, JSON support, SQL support, Python bindings, or Windows support.
 
 Use an explicit `Generator` instead of package-level mutable state.
+
+The machine ID is the first three bytes of the SHA-256 of the hostname, while `rs/xid` uses MD5, so the same host yields a different machine ID and therefore different IDs.
+
+`from_string()` rejects text whose last character carries non-canonical low bits, while `rs/xid` accepts it.
 
 ## Security
 

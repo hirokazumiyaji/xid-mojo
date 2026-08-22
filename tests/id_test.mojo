@@ -5,7 +5,7 @@ from std.testing import (
     assert_raises,
     assert_true,
 )
-from xid.id import ID, from_bytes, from_string, nil_id, sort
+from xid.id import ID, from_bytes, from_string, nil_id
 
 
 def fixture_bytes() -> Array[UInt8, 12]:
@@ -88,6 +88,8 @@ def test_compare_and_sort() raises:
     assert_equal(zero.compare(one), -1)
     assert_equal(one.compare(zero), 1)
     assert_equal(one.compare(one), 0)
+    assert_true(zero < one)
+    assert_true(one > zero)
     var values: List[ID] = [one.copy(), zero.copy()]
     sort(values)
     assert_equal(values[0], zero)

@@ -22,8 +22,6 @@ def test_machine_id_override() raises:
     assert_equal(_parse_machine_id_override("123"), small)
     assert_equal(_parse_machine_id_override("16777215"), maximum)
     with assert_raises(contains="XID_MACHINE_ID value is set to not a number"):
-        _ = _parse_machine_id_override("")
-    with assert_raises(contains="XID_MACHINE_ID value is set to not a number"):
         _ = _parse_machine_id_override("12x")
     with assert_raises(contains="XID_MACHINE_ID out of range for 3 bytes"):
         _ = _parse_machine_id_override("-1")

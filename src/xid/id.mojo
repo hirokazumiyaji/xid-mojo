@@ -4,7 +4,7 @@ from std.hashlib import Hasher
 comptime _ALPHABET: StaticString = "0123456789abcdefghijklmnopqrstuv"
 
 
-struct ID(Copyable, Equatable, Hashable, Movable, Writable):
+struct ID(Comparable, Copyable, Hashable, Movable, Writable):
     var _bytes: Array[UInt8, 12]
 
     def __init__(out self, var bytes: Array[UInt8, 12]):
@@ -60,33 +60,35 @@ struct ID(Copyable, Equatable, Hashable, Movable, Writable):
                 return 1
         return 0
 
+    def __lt__(self, other: Self) -> Bool:
+        return self.compare(other) < 0
+
     def to_string(self) -> String:
-        var digits = Array[UInt8, 20](fill=0)
-        var bytes = self._bytes.copy()
-        digits[0] = bytes[0] >> 3
-        digits[1] = (bytes[0] << 2 | bytes[1] >> 6) & 0x1F
-        digits[2] = (bytes[1] >> 1) & 0x1F
-        digits[3] = (bytes[1] << 4 | bytes[2] >> 4) & 0x1F
-        digits[4] = (bytes[2] << 1 | bytes[3] >> 7) & 0x1F
-        digits[5] = (bytes[3] >> 2) & 0x1F
-        digits[6] = (bytes[3] << 3 | bytes[4] >> 5) & 0x1F
-        digits[7] = bytes[4] & 0x1F
-        digits[8] = bytes[5] >> 3
-        digits[9] = (bytes[5] << 2 | bytes[6] >> 6) & 0x1F
-        digits[10] = (bytes[6] >> 1) & 0x1F
-        digits[11] = (bytes[6] << 4 | bytes[7] >> 4) & 0x1F
-        digits[12] = (bytes[7] << 1 | bytes[8] >> 7) & 0x1F
-        digits[13] = (bytes[8] >> 2) & 0x1F
-        digits[14] = (bytes[8] << 3 | bytes[9] >> 5) & 0x1F
-        digits[15] = bytes[9] & 0x1F
-        digits[16] = bytes[10] >> 3
-        digits[17] = (bytes[10] << 2 | bytes[11] >> 6) & 0x1F
-        digits[18] = (bytes[11] >> 1) & 0x1F
-        digits[19] = (bytes[11] << 4) & 0x1F
-        var output = String(capacity=20)
+        var chars = Array[Byte, 20](fill=0)
+        chars[0] = self._bytes[0] >> 3
+        chars[1] = (self._bytes[0] << 2 | self._bytes[1] >> 6) & 0x1F
+        chars[2] = (self._bytes[1] >> 1) & 0x1F
+        chars[3] = (self._bytes[1] << 4 | self._bytes[2] >> 4) & 0x1F
+        chars[4] = (self._bytes[2] << 1 | self._bytes[3] >> 7) & 0x1F
+        chars[5] = (self._bytes[3] >> 2) & 0x1F
+        chars[6] = (self._bytes[3] << 3 | self._bytes[4] >> 5) & 0x1F
+        chars[7] = self._bytes[4] & 0x1F
+        chars[8] = self._bytes[5] >> 3
+        chars[9] = (self._bytes[5] << 2 | self._bytes[6] >> 6) & 0x1F
+        chars[10] = (self._bytes[6] >> 1) & 0x1F
+        chars[11] = (self._bytes[6] << 4 | self._bytes[7] >> 4) & 0x1F
+        chars[12] = (self._bytes[7] << 1 | self._bytes[8] >> 7) & 0x1F
+        chars[13] = (self._bytes[8] >> 2) & 0x1F
+        chars[14] = (self._bytes[8] << 3 | self._bytes[9] >> 5) & 0x1F
+        chars[15] = self._bytes[9] & 0x1F
+        chars[16] = self._bytes[10] >> 3
+        chars[17] = (self._bytes[10] << 2 | self._bytes[11] >> 6) & 0x1F
+        chars[18] = (self._bytes[11] >> 1) & 0x1F
+        chars[19] = (self._bytes[11] << 4) & 0x1F
+        var alphabet = _ALPHABET.as_bytes()
         for i in range(20):
-            output += String(_ALPHABET[byte=Int(digits[i])])
-        return output^
+            chars[i] = alphabet[Int(chars[i])]
+        return String(StringSlice(unsafe_from_utf8=Span(chars)))
 
     def write_to(self, mut writer: Some[Writer]):
         writer.write(self.to_string())
@@ -112,10 +114,10 @@ def _decode_digit(value: UInt8) raises -> UInt8:
 def from_string(value: String) raises -> ID:
     if value.byte_length() != 20:
         raise Error("xid: invalid ID")
+    var raw = value.as_bytes()
     var digits = Array[UInt8, 20](fill=0)
     for i in range(20):
-        var character = String(value[byte=i])
-        digits[i] = _decode_digit(character.as_bytes()[0])
+        digits[i] = _decode_digit(raw[i])
     if digits[19] & 0x0F != 0:
         raise Error("xid: invalid ID")
     var bytes = Array[UInt8, 12](fill=0)
@@ -136,13 +138,3 @@ def from_string(value: String) raises -> ID:
 
 def nil_id() -> ID:
     return ID(Array[UInt8, 12](fill=0))
-
-
-def sort(mut ids: List[ID]):
-    for i in range(1, len(ids)):
-        var value = ids[i].copy()
-        var j = i
-        while j > 0 and value.compare(ids[j - 1]) < 0:
-            ids[j] = ids[j - 1].copy()
-            j -= 1
-        ids[j] = value^
