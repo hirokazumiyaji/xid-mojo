@@ -8,7 +8,7 @@ Use Pixi with Mojo 1.0.0 and `crypto = "0.2.0"`.
 
 ```toml
 channels = [
-    "https://prefix.dev/@hirokazumiyaji/mojo",
+    "https://prefix.dev/hirokazumiyaji/mojo",
     "https://conda.modular.com/max",
     "conda-forge",
 ]
@@ -30,7 +30,11 @@ def main() raises:
 
 ## Binary layout
 
-An XID contains 12 bytes in big-endian order.
+An XID has a 12-byte layout.
+
+The numeric timestamp, process ID, and counter fields are big-endian.
+
+The machine ID is stored as three raw bytes.
 
 | Offset | Length | Value |
 |---:|---:|---|

@@ -8,7 +8,7 @@ Pixi、Mojo 1.0.0、`crypto = "0.2.0"` を使用する。
 
 ```toml
 channels = [
-    "https://prefix.dev/@hirokazumiyaji/mojo",
+    "https://prefix.dev/hirokazumiyaji/mojo",
     "https://conda.modular.com/max",
     "conda-forge",
 ]
@@ -30,7 +30,11 @@ def main() raises:
 
 ## バイナリレイアウト
 
-XID は big-endian の 12 バイトで構成される。
+XID は 12 バイトのレイアウトで構成される。
+
+timestamp、process ID、counter の数値 field は big-endian で格納される。
+
+machine ID は 3 バイトの raw bytes として格納される。
 
 | オフセット | 長さ | 値 |
 |---:|---:|---|
