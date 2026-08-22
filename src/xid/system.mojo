@@ -13,15 +13,13 @@ def _process_id() -> UInt16:
     return UInt16(external_call["getpid", c_int]())
 
 
-def _hostname_bytes() raises -> List[UInt8]:
+def _hostname_bytes() -> List[UInt8]:
     var buffer = Array[UInt8, 256](fill=0)
     if external_call["gethostname", c_int](buffer.unsafe_ptr(), c_size_t(256)) != 0:
-        raise Error("xid: cannot get hostname")
+        return []
     var result: List[UInt8] = []
     for i in range(256):
         if buffer[i] == 0:
-            if len(result) == 0:
-                raise Error("xid: cannot get hostname")
-            return result^
+            break
         result.append(buffer[i])
-    raise Error("xid: cannot get hostname")
+    return result^

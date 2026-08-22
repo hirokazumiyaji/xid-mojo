@@ -1,9 +1,8 @@
+from crypto import rand
 from crypto.sha256 import SHA256
 from std.atomic import Atomic
 from std.memory import ArcPointer
 from std.os import getenv
-from std.random import Random
-from std.time import perf_counter_ns
 from xid.id import ID
 from xid.system import _hostname_bytes, _process_id, _unix_seconds
 
@@ -19,15 +18,10 @@ struct Generator(Copyable, Movable):
         if override.byte_length() > 0:
             machine = _parse_machine_id_override(override)
         else:
-            var hostname = _hostname_bytes()
-            machine = _machine_id_from_hostname(Span(hostname))
-        var pid = _process_id()
-        var seed = UInt64(perf_counter_ns())
-        seed ^= UInt64(machine[0]) << 40
-        seed ^= UInt64(machine[1]) << 32
-        seed ^= UInt64(machine[2]) << 24
-        seed ^= UInt64(pid) << 8
-        self = _generator_with_parts(machine, pid, _initial_counter(seed))
+            machine = _machine_id()
+        self = _generator_with_parts(
+            machine, _process_id(), _initial_counter()
+        )
 
     def __init__(
         out self,
@@ -73,6 +67,19 @@ def _generator_with_parts(
     )
 
 
+def _random_bytes() raises -> Array[UInt8, 3]:
+    var raw = Array[UInt8, 3](fill=0)
+    rand.fill(Span(raw))
+    return raw^
+
+
+def _machine_id() raises -> Array[UInt8, 3]:
+    var hostname = _hostname_bytes()
+    if len(hostname) == 0:
+        return _random_bytes()
+    return _machine_id_from_hostname(Span(hostname))
+
+
 def _machine_id_from_hostname(hostname: Span[Byte, _]) -> Array[UInt8, 3]:
     var hasher = SHA256()
     hasher.update_bytes(hostname)
@@ -100,6 +107,6 @@ def _parse_machine_id_override(value: String) raises -> Array[UInt8, 3]:
     ]
 
 
-def _initial_counter(seed: UInt64) -> UInt32:
-    var random = Random(seed=seed)
-    return UInt32(random.step()[0] & 0x00FFFFFF)
+def _initial_counter() raises -> UInt32:
+    var raw = _random_bytes()
+    return UInt32(raw[0]) << 16 | UInt32(raw[1]) << 8 | UInt32(raw[2])

@@ -5,9 +5,11 @@ from xid.generator import (
     Generator,
     _generator_with_parts,
     _initial_counter,
+    _machine_id,
     _machine_id_from_hostname,
     _parse_machine_id_override,
 )
+from xid.system import _hostname_bytes
 
 
 def test_machine_id_from_hostname() raises:
@@ -29,10 +31,14 @@ def test_machine_id_override() raises:
         _ = _parse_machine_id_override("16777216")
 
 
-def test_initial_counter_is_deterministic_and_24_bit() raises:
-    var value = _initial_counter(UInt64(123456789))
-    assert_equal(value & 0xFF000000, UInt32(0))
-    assert_equal(value, _initial_counter(UInt64(123456789)))
+def test_initial_counter_is_24_bit() raises:
+    for _ in range(4):
+        assert_equal(_initial_counter() & 0xFF000000, UInt32(0))
+
+
+def test_machine_id_hashes_the_hostname() raises:
+    var hostname = _hostname_bytes()
+    assert_equal(_machine_id(), _machine_id_from_hostname(Span(hostname)))
 
 
 def test_generator_layout_and_counter() raises:

@@ -55,6 +55,16 @@ The text order matches bytewise order.
 
 `compare()` returns `-1`, `0`, or `1` for parity with `rs/xid`.
 
+## Machine ID
+
+`Generator()` resolves the machine ID in this order.
+
+1. `XID_MACHINE_ID`, read as a decimal integer from 0 to 16777215.
+2. The first three bytes of the SHA-256 of the hostname.
+3. Three random bytes, when the host reports no hostname.
+
+The initial counter is seeded from the operating system random source, so two processes started at the same instant do not share a starting counter.
+
 ## Generator ownership and concurrency
 
 Create one `Generator()` and retain it in application state.

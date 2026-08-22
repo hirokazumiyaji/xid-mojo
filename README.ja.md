@@ -55,6 +55,16 @@ XID は alphabet `0123456789abcdefghijklmnopqrstuv` を使う 20 文字の小文
 
 `compare()` は `rs/xid` と同様に `-1`、`0`、`1` を返す。
 
+## machine ID
+
+`Generator()` は machine ID を次の順序で決定する。
+
+1. `XID_MACHINE_ID` を 0 から 16777215 の 10 進整数として読む。
+2. hostname の SHA-256 の先頭 3 バイトを使う。
+3. host が hostname を返さない場合はランダムな 3 バイトを使う。
+
+初期 counter は OS の乱数源から取得するため、同時刻に起動した 2 つの process が同じ開始 counter を共有することはない。
+
 ## Generator の所有権と並行性
 
 `Generator()` を一度生成し、アプリケーションの状態として保持する。
