@@ -39,8 +39,8 @@ struct Generator(Copyable, Movable):
         self._pid = pid
         self._counter = counter^
 
-    def new_with_time(self, timestamp: UInt32) -> ID:
-        var counter = (self._counter[].fetch_add(1) + 1) & 0x00FFFFFF
+    def new_with_time(mut self, timestamp: UInt32) -> ID:
+        var counter = self._next_counter()
         var raw = Array[UInt8, 12](fill=0)
         raw[0] = UInt8(timestamp >> 24)
         raw[1] = UInt8(timestamp >> 16)
@@ -56,7 +56,10 @@ struct Generator(Copyable, Movable):
         raw[11] = UInt8(counter)
         return ID(raw^)
 
-    def new(self) raises -> ID:
+    def _next_counter(self) -> UInt32:
+        return (self._counter[].fetch_add(1) + 1) & 0x00FFFFFF
+
+    def new(mut self) raises -> ID:
         return self.new_with_time(_unix_seconds())
 
 

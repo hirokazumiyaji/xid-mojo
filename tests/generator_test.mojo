@@ -70,7 +70,8 @@ def test_public_generator_uses_override_and_current_time() raises:
     var original = getenv("XID_MACHINE_ID")
     _ = setenv("XID_MACHINE_ID", "66051")
     try:
-        var value = Generator().new()
+        var generator = Generator()
+        var value = generator.new()
         var expected_machine: Array[UInt8, 3] = [1, 2, 3]
         assert_equal(value.machine(), expected_machine)
         assert_equal(value.pid() > 0, True)
@@ -93,9 +94,7 @@ def test_concurrent_generation_has_no_duplicate_counters() raises:
     var group = TaskGroup()
 
     async def generate(index: Int) {imm}:
-        counters_ptr[unsafe_offset=index] = generator_copy.new_with_time(
-            123
-        ).counter()
+        counters_ptr[unsafe_offset=index] = generator_copy._next_counter()
 
     for index in range(256):
         group.create_task(generate(index))
