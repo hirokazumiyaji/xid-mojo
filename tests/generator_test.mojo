@@ -1,5 +1,5 @@
+from std.algorithm import map
 from std.os import getenv, setenv, unsetenv
-from std.runtime.asyncrt import TaskGroup
 from std.testing import TestSuite, assert_equal, assert_raises, assert_true
 from xid.generator import (
     Generator,
@@ -93,14 +93,10 @@ def test_concurrent_generation_has_no_duplicate_counters() raises:
     var counters = Array[UInt32, 256](fill=0)
     var counters_ptr = counters.unsafe_ptr()
 
-    var group = TaskGroup()
-
-    async def generate(index: Int) {imm}:
+    def generate(index: Int) {imm}:
         counters_ptr[unsafe_offset=index] = generator_copy._next_counter()
 
-    for index in range(256):
-        group.create_task(generate(index))
-    group.wait()
+    map(256, generate)
     for i in range(256):
         for j in range(i + 1, 256):
             assert_true(counters[i] != counters[j])

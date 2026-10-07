@@ -16,11 +16,11 @@ build:
 
 requirements:
   build:
-    - mojo-compiler =1.0.0
-    - crypto =0.2.0
+    - mojo-compiler =1.1.0
+    - crypto =0.3.0
   host:
-    - mojo-compiler =1.0.0
-    - crypto =0.2.0
+    - mojo-compiler =1.1.0
+    - crypto =0.3.0
   run:
     - ${{ pin_compatible('mojo-compiler') }}
     - ${{ pin_compatible('crypto') }}

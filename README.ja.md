@@ -4,7 +4,7 @@
 
 ## インストール
 
-Pixi、Mojo 1.0.0、`crypto = "0.2.0"` を使用する。
+Pixi、Mojo 1.1.0、`crypto = "0.3.0"` を使用する。
 
 ```toml
 channels = [
@@ -69,7 +69,7 @@ XID は alphabet `0123456789abcdefghijklmnopqrstuv` を使う 20 文字の小文
 
 `Generator()` を一度生成し、アプリケーションの状態として保持する。
 
-コピーは `ArcPointer[Atomic[DType.uint32]]` を通じて一つの atomic counter を共有する。
+コピーは `ArcPointer[Atomic[UInt32]]` を通じて一つの atomic counter を共有する。
 
 各 thread はコピーを所有し、`new()` または `new_with_time()` を呼び出せる。
 

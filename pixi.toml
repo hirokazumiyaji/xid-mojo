@@ -10,9 +10,9 @@ channels = [
 platforms = ["osx-arm64", "linux-64"]
 
 [dependencies]
-mojo-compiler = "1.0.0"
-crypto = "0.2.0"
-mblack = "26.5.0"
+mojo-compiler = "==1.1.0"
+crypto = "==0.3.0"
+mblack = "==26.6.0"
 
 [tasks]
 format = "mojo format src tests"

@@ -10,7 +10,7 @@ from xid.system import _hostname_bytes, _process_id, _unix_seconds
 struct Generator(Copyable, Movable):
     var _machine: Array[UInt8, 3]
     var _pid: UInt16
-    var _counter: ArcPointer[Atomic[DType.uint32]]
+    var _counter: ArcPointer[Atomic[UInt32]]
 
     def __init__(out self) raises:
         var override = getenv("XID_MACHINE_ID")
@@ -25,7 +25,7 @@ struct Generator(Copyable, Movable):
         out self,
         var machine: Array[UInt8, 3],
         pid: UInt16,
-        var counter: ArcPointer[Atomic[DType.uint32]],
+        var counter: ArcPointer[Atomic[UInt32]],
     ):
         self._machine = machine^
         self._pid = pid
@@ -61,7 +61,7 @@ def _generator_with_parts(
     return Generator(
         machine.copy(),
         pid,
-        ArcPointer(Atomic[DType.uint32](counter & 0x00FFFFFF)),
+        ArcPointer(Atomic[UInt32](counter & 0x00FFFFFF)),
     )
 
 
