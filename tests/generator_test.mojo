@@ -1,5 +1,5 @@
 from std.os import getenv, setenv, unsetenv
-from std.runtime.asyncrt import TaskGroup
+from std.runtime._asyncrt import TaskGroup
 from std.testing import TestSuite, assert_equal, assert_raises, assert_true
 from xid.generator import (
     Generator,

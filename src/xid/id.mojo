@@ -20,7 +20,7 @@ struct ID(Comparable, Copyable, Hashable, Movable, Writable):
         return True
 
     def __hash__[H: Hasher](self, mut hasher: H):
-        hasher._update_with_bytes(Span(self._bytes))
+        hasher.update(Span(self._bytes))
 
     def time(self) -> UInt32:
         return (

@@ -4,7 +4,7 @@
 
 ## Installation
 
-Use Pixi with Mojo 1.0.0 and `crypto = "0.2.0"`.
+Use Pixi with Mojo 1.1.0 and `crypto = "0.3.0"`.
 
 ```toml
 channels = [
@@ -69,7 +69,7 @@ The initial counter is seeded from the operating system random source, so two pr
 
 Create one `Generator()` and retain it in application state.
 
-Copies share one atomic counter through `ArcPointer[Atomic[DType.uint32]]`.
+Copies share one atomic counter through `ArcPointer[Atomic[UInt32]]`.
 
 Each thread may own a copy and call `new()` or `new_with_time()`.
 
