@@ -31,7 +31,7 @@ struct Generator(Copyable, Movable):
         self._pid = pid
         self._counter = counter^
 
-    def new_with_time(mut self, timestamp: UInt32) -> ID:
+    def new_with_time(self, timestamp: UInt32) -> ID:
         var counter = self._next_counter()
         var raw = Array[UInt8, 12](fill=0)
         raw[0] = UInt8(timestamp >> 24)
@@ -51,7 +51,7 @@ struct Generator(Copyable, Movable):
     def _next_counter(self) -> UInt32:
         return (self._counter[].fetch_add(1) + 1) & 0x00FFFFFF
 
-    def new(mut self) raises -> ID:
+    def new(self) raises -> ID:
         return self.new_with_time(_unix_seconds())
 
 
@@ -87,6 +87,8 @@ def _machine_id_from_hostname(hostname: Span[Byte, _]) -> Array[UInt8, 3]:
 
 def _parse_machine_id_override(value: String) raises -> Array[UInt8, 3]:
     var raw = value.as_bytes()
+    if len(raw) == 0:
+        raise Error("XID_MACHINE_ID value is set to not a number")
     if raw[0] == UInt8(0x2D):
         raise Error("XID_MACHINE_ID out of range for 3 bytes")
     var number: UInt32 = 0

@@ -25,6 +25,8 @@ def test_machine_id_override() raises:
     assert_equal(_parse_machine_id_override("16777215"), maximum)
     with assert_raises(contains="XID_MACHINE_ID value is set to not a number"):
         _ = _parse_machine_id_override("12x")
+    with assert_raises(contains="XID_MACHINE_ID value is set to not a number"):
+        _ = _parse_machine_id_override("")
     with assert_raises(contains="XID_MACHINE_ID out of range for 3 bytes"):
         _ = _parse_machine_id_override("-1")
     with assert_raises(contains="XID_MACHINE_ID out of range for 3 bytes"):
@@ -59,6 +61,17 @@ def test_generator_copies_share_counter() raises:
     var second = first.copy()
     assert_equal(first.new_with_time(1).counter(), UInt32(10))
     assert_equal(second.new_with_time(1).counter(), UInt32(11))
+
+
+def _counter_from(generator: Generator) -> UInt32:
+    return generator.new_with_time(1).counter()
+
+
+def test_generator_works_through_immutable_borrow() raises:
+    var machine: Array[UInt8, 3] = [1, 2, 3]
+    var generator = _generator_with_parts(machine, UInt16(4), UInt32(9))
+    assert_equal(_counter_from(generator), UInt32(10))
+    assert_equal(_counter_from(generator), UInt32(11))
 
 
 def test_generator_counter_wraps_at_24_bits() raises:
