@@ -1,6 +1,6 @@
 [workspace]
 name = "xid"
-version = "0.1.0"
+version = "0.2.0"
 description = "A globally unique ID generator for Mojo"
 channels = [
     "https://prefix.dev/hirokazumiyaji/mojo",
