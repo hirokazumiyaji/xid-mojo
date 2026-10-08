@@ -30,7 +30,7 @@ jobs:
         env:
           RELEASE_TAG: ${{ github.ref_name }}
         run: |
-          recipe_version="$(rg -m 1 '^  version:' conda.recipe/recipe.yaml | sed -n 's/^  version: "\([^"]*\)"/\1/p')"
+          recipe_version="$(sed -n 's/^  version: "\([^"]*\)"$/\1/p' conda.recipe/recipe.yaml | head -n 1)"
           test -n "$recipe_version"
           test "${RELEASE_TAG#v}" = "$recipe_version"
 
