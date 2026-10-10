@@ -5,6 +5,7 @@ from std.testing import (
     assert_raises,
     assert_true,
 )
+from proptest import Settings, TestCase, for_all, integers
 from xid.id import ID, from_bytes, from_string, nil_id
 
 
@@ -77,6 +78,21 @@ def test_string_round_trip() raises:
     var value = from_bytes(Span(raw))
     assert_equal(value.to_string(), "9m4e2mr0ui3e8a215n4g")
     assert_equal(from_string("9m4e2mr0ui3e8a215n4g"), value)
+
+
+def _id_string_round_trip(mut tc: TestCase) raises:
+    var raw = Array[UInt8, 12](fill=0)
+    for i in range(12):
+        raw[i] = UInt8(tc.draw(integers(0, 255), "byte"))
+    var value = from_bytes(Span(raw))
+    assert_equal(from_string(value.to_string()), value)
+
+
+def test_id_string_round_trip_property() raises:
+    for_all(
+        _id_string_round_trip,
+        Settings(seed=UInt64(1), max_examples=1000),
+    )
 
 
 def test_from_string_rejects_invalid_values() raises:

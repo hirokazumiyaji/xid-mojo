@@ -52,6 +52,7 @@ environments:
       - conda: https://conda.modular.com/max/noarch/mblack-26.6.0-release.conda
       - conda: https://conda.modular.com/max/noarch/mojo-python-1.1.0-release.conda
       - conda: https://prefix.dev/hirokazumiyaji/mojo/linux-64/crypto-0.3.0-hb0f4dca_0.conda
+      - conda: https://prefix.dev/hirokazumiyaji/mojo/linux-64/proptest-0.1.0-hb0f4dca_0.conda
       osx-arm64:
       - conda: https://conda.anaconda.org/conda-forge/noarch/ca-certificates-2026.7.22-hbd8a1cb_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/click-8.5.0-pyh5ded981_0.conda
@@ -81,6 +82,7 @@ environments:
       - conda: https://conda.modular.com/max/noarch/mojo-python-1.1.0-release.conda
       - conda: https://conda.modular.com/max/osx-arm64/mojo-compiler-1.1.0-release.conda
       - conda: https://prefix.dev/hirokazumiyaji/mojo/osx-arm64/crypto-0.3.0-h60d57d3_0.conda
+      - conda: https://prefix.dev/hirokazumiyaji/mojo/osx-arm64/proptest-0.1.0-h60d57d3_0.conda
 packages:
 - conda: https://conda.anaconda.org/conda-forge/linux-64/_openmp_mutex-4.5-20_gnu.conda
   build_number: 20
@@ -717,6 +719,14 @@ packages:
   run_exports: {}
   size: 193881
   timestamp: 1791352622634
+- conda: https://prefix.dev/hirokazumiyaji/mojo/linux-64/proptest-0.1.0-hb0f4dca_0.conda
+  sha256: d6c794e31ccd83d5a34e9ffa625522919afbd244a29553f184887671c6e93d92
+  md5: 1bbe380044617b2c47962ab4c1ccca71
+  depends:
+  - mojo-compiler >=1.1.0,<2.0a0
+  run_exports: {}
+  size: 440901
+  timestamp: 1791620207087
 - conda: https://prefix.dev/hirokazumiyaji/mojo/osx-arm64/crypto-0.3.0-h60d57d3_0.conda
   sha256: d3f5fb45759f9d157658948f0d1d501392fc1f04e87e26f4640398e23480d205
   md5: 7e96a587b149dd58278db20c005b27ae
@@ -725,3 +735,11 @@ packages:
   run_exports: {}
   size: 193150
   timestamp: 1791352630178
+- conda: https://prefix.dev/hirokazumiyaji/mojo/osx-arm64/proptest-0.1.0-h60d57d3_0.conda
+  sha256: 12b82ec4ed7fda21f1cfb6a76164622fe1a33a33227d30bc78d6a89e3eb22742
+  md5: e7cac7ad6f1db83b2ed378ad4653e492
+  depends:
+  - mojo-compiler >=1.1.0,<2.0a0
+  run_exports: {}
+  size: 440106
+  timestamp: 1791620209638

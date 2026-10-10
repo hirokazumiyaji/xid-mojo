@@ -13,6 +13,7 @@ platforms = ["osx-arm64", "linux-64"]
 mojo-compiler = "==1.1.0"
 crypto = "==0.3.0"
 mblack = "==26.6.0"
+proptest = ">=0.1.0,<0.2"
 
 [tasks]
 format = "mojo format src tests"
